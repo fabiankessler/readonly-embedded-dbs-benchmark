@@ -25,54 +25,7 @@ public class Util {
         }
     }
 
-    public static void setSqliteConnProbsForImporting(Connection connection) {
-        try {
-            //see http://www.sqlite.org/pragma.html
-            connection.prepareStatement("PRAGMA synchronous=OFF;").execute();
-            connection.prepareStatement("PRAGMA journal_mode=OFF;").execute();
-            connection.prepareStatement("PRAGMA temp_store=3;").execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public static void setSqliteConnProbsForReadonly(Connection connection) {
-        try {
-            //see http://www.sqlite.org/pragma.html
-            connection.prepareStatement("PRAGMA synchronous=OFF;").execute();
-            connection.prepareStatement("PRAGMA journal_mode=OFF;").execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-//        try {
-//            //java.sql.SQLException: Cannot set read-only flag after establishing a connection. Use SQLiteConfig#setReadOnly and SQLiteConfig.createConnection().
-//            connection.setReadOnly(true);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
-
-    public static String makeSqliteConnectionStringForImporting(String pathWithFilename) {
-        return makeSqliteConnectionString(pathWithFilename);
-    }
-    public static String makeSqliteConnectionStringForReadonly(String pathWithFilename) {
-        return makeSqliteConnectionString(pathWithFilename);
-    }
-    public static String makeSqliteConnectionString(String pathWithFilename) {
-        return "jdbc:sqlite:" +pathWithFilename;
-    }
-
-    public static String makeH2ConnectionStringForImporting(String pathWithoutFileSuffix) {
-        String connectionString = "jdbc:h2:file:" +pathWithoutFileSuffix;
-        connectionString += ";LOG=0;CACHE_SIZE=65536;LOCK_MODE=0;UNDO_LOG=0"; //see http://www.h2database.com/html/performance.html
-        return connectionString;
-    }
-    public static String makeH2ConnectionStringForReadonly(String pathWithoutFileSuffix) {
-        String connectionString = "jdbc:h2:file:" +pathWithoutFileSuffix;
-        connectionString += ";IFEXISTS=TRUE";
-        connectionString += ";ACCESS_MODE_DATA=r";
-        return connectionString;
-    }
 
     /**
      * @return 32-character string.

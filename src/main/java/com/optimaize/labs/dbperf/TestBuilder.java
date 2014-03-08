@@ -8,11 +8,6 @@ package com.optimaize.labs.dbperf;
 class TestBuilder {
 
 
-    public enum Database {
-        H2,
-        SQLITE
-    }
-
     private Database database;
 
     private int numRecords;

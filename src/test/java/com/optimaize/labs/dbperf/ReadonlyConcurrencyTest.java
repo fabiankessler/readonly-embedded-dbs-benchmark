@@ -3,7 +3,6 @@ package com.optimaize.labs.dbperf;
 import com.google.common.base.Stopwatch;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -35,8 +34,8 @@ public class ReadonlyConcurrencyTest {
 
     @BeforeClass
     public void setup() throws SQLException, IOException {
-        DbCreators.h2().delete();
-        DbCreators.h2().create(10000, false);
+        TestDbCreators.h2().delete();
+        TestDbCreators.h2().create(10000, false);
     }
     @AfterClass
     public static void teardown() throws SQLException {
@@ -46,7 +45,7 @@ public class ReadonlyConcurrencyTest {
     @Test
     public void foo() {
         DbTestRunner runner = new TestBuilder()
-                .database(TestBuilder.Database.SQLITE)
+                .database(Database.SQLITE)
                 .numRecords(NUM_RECORDS)
                 .indexed(true)
                 .connectionPool(20)

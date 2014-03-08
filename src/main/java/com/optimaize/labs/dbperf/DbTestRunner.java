@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 class DbTestRunner {
 
     @NotNull
-    private TestBuilder.Database database;
+    private Database database;
 
     private int numRecords;
     private boolean indexed;
@@ -23,7 +23,7 @@ class DbTestRunner {
 
     private int testIterations;
 
-    DbTestRunner(@NotNull TestBuilder.Database database,
+    DbTestRunner(@NotNull Database database,
                  int numRecords, boolean indexed,
                  @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
                  int testIterations) {
