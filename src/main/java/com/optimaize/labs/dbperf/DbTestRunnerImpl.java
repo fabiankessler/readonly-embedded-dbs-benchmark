@@ -36,6 +36,8 @@ class DbTestRunnerImpl implements DbTestRunner {
     private Connection dbSingleConnection;
     @Nullable
     private ComboPooledDataSource dbConnectionPool;
+    @NotNull
+    private JdbcTemplate jdbcTemplate;
 
 
     DbTestRunnerImpl(@NotNull RunConfig cfg) {
@@ -70,6 +72,7 @@ class DbTestRunnerImpl implements DbTestRunner {
         } else {
             this.threadPoolExecutor = null;
         }
+        this.jdbcTemplate = makeJdbcTemplate();
 
         Stopwatch totaltime = Stopwatch.createStarted();
         ConcurrentMaxCollector maxCollector = ConcurrentMaxCollector.create(0L);
@@ -96,7 +99,7 @@ class DbTestRunnerImpl implements DbTestRunner {
             if (throwOnFailure) {
                 throw e;
             } else {
-                //never mind
+                //never mind. db file still locked, happens on windows.
             }
         }
     }
@@ -121,15 +124,13 @@ class DbTestRunnerImpl implements DbTestRunner {
         if (threadPoolExecutor!=null) {
             threadPoolExecutor.submit(new Runnable() {
                 @Override public void run() {
-                    maxCollector.offer(execute(num, getJdbcTemplate()));
+                    maxCollector.offer(execute(num, jdbcTemplate));
                 }
             });
         } else {
-            maxCollector.offer(execute(num, getJdbcTemplate()));
+            maxCollector.offer(execute(num, jdbcTemplate));
         }
     }
-
-
 
 
     private void shutdown(ThreadPoolExecutor executor) {
@@ -148,47 +149,24 @@ class DbTestRunnerImpl implements DbTestRunner {
         Stopwatch stopwatch = Stopwatch.createStarted();
         int count = jdbcTemplate.queryForInt("select count(*) from test where field1 = ?", Util.md5(Integer.valueOf(num).toString()));
         if (count!=1) throw new AssertionError("Expected to find exactly 1 record!");
-        long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-//        assertTrue(elapsed <= 100, ""+elapsed);
-        return elapsed;
+        return stopwatch.elapsed(TimeUnit.MILLISECONDS);
     }
 
 
-    private JdbcTemplate getJdbcTemplate() {
+    private JdbcTemplate makeJdbcTemplate() {
         if (this.dbSingleConnection != null) {
-            return new JdbcTemplate(getDataSource());
+            return new JdbcTemplate(makeSingleConnectionDataSource());
         } else {
             assert dbConnectionPool != null;
             return new JdbcTemplate(dbConnectionPool);
         }
     }
 
-    private DataSource getDataSource() {
+    private DataSource makeSingleConnectionDataSource() {
         return new SingleConnectionDataSource(
-                getConnection(),
-                false  //TODO do we want this?
+                dbSingleConnection,
+                false
         );
-    }
-
-    private Connection getConnection() {
-        if (this.dbSingleConnection != null) {
-            return dbSingleConnection;
-        } else {
-            Connection connectionFromPool = getConnectionFromPool();
-
-            //TODO do i need to set this each time to ensure it's set?
-            dbUtil.setPropertiesForReadonly(connectionFromPool);
-
-            return connectionFromPool;
-        }
-    }
-    private Connection getConnectionFromPool() {
-        try {
-            assert dbConnectionPool != null;
-            return dbConnectionPool.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private ComboPooledDataSource makeConnectionPool(int connPoolSize) {
@@ -199,8 +177,8 @@ class DbTestRunnerImpl implements DbTestRunner {
             cpds.setInitialPoolSize(0);
             cpds.setMinPoolSize(0);
             cpds.setMaxPoolSize(connPoolSize);
-            cpds.setMaxIdleTime(0);
-            cpds.setMaxIdleTimeExcessConnections(0);
+            cpds.setMaxIdleTime(1);
+            cpds.setMaxIdleTimeExcessConnections(1);
             //cpds.setAcquireIncrement(Accomodation);
             return cpds;
         } catch (PropertyVetoException ex) {
