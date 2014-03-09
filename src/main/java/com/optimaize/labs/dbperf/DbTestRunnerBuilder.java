@@ -1,7 +1,7 @@
 package com.optimaize.labs.dbperf;
 
 /**
- * Builder for {@link DbTestRunnerImpl}.
+ * Builder for {@link DbTestRunner}.
  *
  * @author Fabian Kessler
  */

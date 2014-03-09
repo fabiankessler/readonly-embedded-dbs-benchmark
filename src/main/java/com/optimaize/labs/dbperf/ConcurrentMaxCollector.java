@@ -21,7 +21,6 @@ public class ConcurrentMaxCollector {
 
     /**
      * This method can be used from multiple threads without synchronization.
-     * @param offered
      */
     public void offer(long offered) {
         long current = atomicLong.get();

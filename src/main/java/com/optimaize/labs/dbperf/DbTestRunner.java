@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Runs a test. Use the {@link DbTestRunnerBuilder}.
+ * Runs a test. Use the {@link DbTestRunnerBuilder} to create one.
  *
  * @author Fabian Kessler
  */

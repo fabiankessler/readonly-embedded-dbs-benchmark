@@ -1,7 +1,9 @@
 package com.optimaize.labs.dbperf;
 
 /**
- * ...
+ * The result from a {@link DbTestRunner#run()}.
+ *
+ * Immutable.
  *
  * @author Fabian Kessler
  */
@@ -39,6 +41,9 @@ public class TestResult implements Comparable<TestResult> {
                 '}';
     }
 
+    /**
+     * The faster execution is considered better, and thus comes first.
+     */
     @Override
     public int compareTo(TestResult o) {
         int compare = Long.compare(totalTimeMs, o.totalTimeMs);

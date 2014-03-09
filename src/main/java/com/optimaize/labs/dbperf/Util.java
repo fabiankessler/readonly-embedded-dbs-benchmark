@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ...
+ * A place for static utility methods. Feel free to refactor.
  *
  * @author Fabian Kessler
  */
@@ -26,7 +26,6 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
-
 
 
     /**
