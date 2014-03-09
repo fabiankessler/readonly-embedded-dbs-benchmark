@@ -5,7 +5,7 @@ package com.optimaize.labs.dbperf.testdbconfig;
  *
  * @author Fabian Kessler
  */
-public interface QueriesConfig {
+public interface TestDbConfig {
     /**
      * How many records are to be inserted into the test db.
      */

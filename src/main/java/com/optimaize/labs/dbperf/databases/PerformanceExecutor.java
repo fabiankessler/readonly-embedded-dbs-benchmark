@@ -1,6 +1,6 @@
 package com.optimaize.labs.dbperf.databases;
 
-import com.optimaize.labs.dbperf.testdbconfig.QueriesConfig;
+import com.optimaize.labs.dbperf.testdbconfig.TestDbConfig;
 import com.optimaize.labs.dbperf.TestResult;
 
 import java.io.IOException;
@@ -19,5 +19,5 @@ public interface PerformanceExecutor {
      */
     List<TestResult> runAll() throws IOException, SQLException;
 
-    List<TestResult> runForConfig(QueriesConfig queriesConfig) throws IOException, SQLException;
+    List<TestResult> runForConfig(TestDbConfig testDbConfig) throws IOException, SQLException;
 }

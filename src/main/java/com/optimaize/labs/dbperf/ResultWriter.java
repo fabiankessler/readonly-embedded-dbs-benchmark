@@ -18,7 +18,7 @@ public class ResultWriter {
 
     private void _print(List<TestResult> results) {
         for (TestResult result : results) {
-            DbTestRunConfig cfg = result.getDbTestRunner().getDbTestRunConfig();
+            RunConfig cfg = result.getDbTestRunner().getDbTestRunConfig();
             p("=====================================");
             p("Result: -----------------------------");
             p("  Times:");

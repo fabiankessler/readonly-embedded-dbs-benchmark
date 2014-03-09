@@ -65,7 +65,7 @@ public class DbTestRunnerBuilder {
 
 
     public DbTestRunner build() {
-        DbTestRunConfig cfg = new DbTestRunConfig(
+        RunConfig cfg = new RunConfig(
                 name, database,
                 numRecords, indexed,
                 connectionPoolSize, threadPoolSize,

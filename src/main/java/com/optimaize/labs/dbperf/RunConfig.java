@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Fabian Kessler
  */
-public class DbTestRunConfig {
+public class RunConfig {
 
     @NotNull
     private final String name;
@@ -27,10 +27,10 @@ public class DbTestRunConfig {
 
     private final int testIterations;
 
-    public DbTestRunConfig(@NotNull String name, @NotNull Database database,
-                           int numRecords, boolean indexed,
-                           @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
-                           int testIterations) {
+    public RunConfig(@NotNull String name, @NotNull Database database,
+                     int numRecords, boolean indexed,
+                     @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
+                     int testIterations) {
         this.name = name;
         this.database = database;
         this.numRecords = numRecords;

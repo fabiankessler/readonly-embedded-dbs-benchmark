@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 class DbTestRunnerImpl implements DbTestRunner {
 
     @NotNull
-    private final DbTestRunConfig cfg;
+    private final RunConfig cfg;
 
     private final DbUtil dbUtil;
     private final TestDbCreator testDbCreator;
@@ -38,7 +38,7 @@ class DbTestRunnerImpl implements DbTestRunner {
     private ComboPooledDataSource dbConnectionPool;
 
 
-    DbTestRunnerImpl(@NotNull DbTestRunConfig cfg) {
+    DbTestRunnerImpl(@NotNull RunConfig cfg) {
         this.cfg = cfg;
         this.dbUtil = cfg.getDatabase().newDbUtil();
         this.testDbCreator = cfg.getDatabase().newTestDbCreator();
@@ -46,7 +46,7 @@ class DbTestRunnerImpl implements DbTestRunner {
 
 
     @NotNull @Override
-    public DbTestRunConfig getDbTestRunConfig() {
+    public RunConfig getDbTestRunConfig() {
         return cfg;
     }
 

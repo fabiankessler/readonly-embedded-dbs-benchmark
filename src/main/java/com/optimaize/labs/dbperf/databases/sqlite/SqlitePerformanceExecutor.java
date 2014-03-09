@@ -2,7 +2,7 @@ package com.optimaize.labs.dbperf.databases.sqlite;
 
 import com.optimaize.labs.dbperf.*;
 import com.optimaize.labs.dbperf.databases.PerformanceExecutor;
-import com.optimaize.labs.dbperf.testdbconfig.QueriesConfig;
+import com.optimaize.labs.dbperf.testdbconfig.TestDbConfig;
 import com.optimaize.labs.dbperf.testdbconfig.QueriesConfigs;
 
 import java.io.IOException;
@@ -31,43 +31,43 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
     @Override
     public List<TestResult> runAll() throws IOException, SQLException {
         List<TestResult> results = new ArrayList<>();
-        for (QueriesConfig queriesConfig : QueriesConfigs.all()) {
-            results.addAll(runForConfig(queriesConfig));
+        for (TestDbConfig testDbConfig : QueriesConfigs.all()) {
+            results.addAll(runForConfig(testDbConfig));
         }
         return results;
     }
 
     @Override
-    public List<TestResult> runForConfig(QueriesConfig queriesConfig) throws IOException, SQLException {
+    public List<TestResult> runForConfig(TestDbConfig testDbConfig) throws IOException, SQLException {
         List<TestResult> results = new ArrayList<>();
-        results.add( singleSharedConnection(queriesConfig) );
-        results.add( connectionPool(queriesConfig) );
+        results.add( singleSharedConnection(testDbConfig) );
+        results.add( connectionPool(testDbConfig) );
         return results;
     }
 
 
-    public TestResult singleSharedConnection(QueriesConfig queriesConfig) throws IOException, SQLException {
+    public TestResult singleSharedConnection(TestDbConfig testDbConfig) throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("singleSharedConnection")
                 .database(Database.SQLITE)
-                .numRecords(queriesConfig.getNumRecords())
-                .indexed(queriesConfig.isIndexed())
+                .numRecords(testDbConfig.getNumRecords())
+                .indexed(testDbConfig.isIndexed())
                 .singleSharedConnection()
                 .threadPool(10)
-                .testIterations(queriesConfig.getTestIterations())
+                .testIterations(testDbConfig.getTestIterations())
                 .build();
         return run(runner);
     }
 
-    public TestResult connectionPool(QueriesConfig queriesConfig) throws IOException, SQLException {
+    public TestResult connectionPool(TestDbConfig testDbConfig) throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("connectionPool")
                 .database(Database.SQLITE)
-                .numRecords(queriesConfig.getNumRecords())
-                .indexed(queriesConfig.isIndexed())
+                .numRecords(testDbConfig.getNumRecords())
+                .indexed(testDbConfig.isIndexed())
                 .connectionPool(10)
                 .threadPool(10)
-                .testIterations(queriesConfig.getTestIterations())
+                .testIterations(testDbConfig.getTestIterations())
                 .build();
         return run(runner);
     }

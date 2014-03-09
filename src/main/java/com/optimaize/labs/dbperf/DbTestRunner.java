@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public interface DbTestRunner {
 
     @NotNull
-    DbTestRunConfig getDbTestRunConfig();
+    RunConfig getDbTestRunConfig();
 
     void prepare() throws IOException, SQLException;
 

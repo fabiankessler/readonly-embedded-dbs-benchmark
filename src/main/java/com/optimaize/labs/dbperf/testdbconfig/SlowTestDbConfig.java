@@ -14,7 +14,7 @@ package com.optimaize.labs.dbperf.testdbconfig;
  *
  * @author Fabian Kessler
  */
-public class SlowQueriesConfig implements QueriesConfig {
+public class SlowTestDbConfig implements TestDbConfig {
 
     @Override
     public int getNumRecords() {

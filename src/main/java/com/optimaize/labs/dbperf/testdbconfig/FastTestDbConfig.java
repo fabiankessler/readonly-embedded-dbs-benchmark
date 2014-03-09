@@ -6,7 +6,7 @@ package com.optimaize.labs.dbperf.testdbconfig;
  *
  * @author Fabian Kessler
  */
-public class FastQueriesConfig implements QueriesConfig {
+public class FastTestDbConfig implements TestDbConfig {
 
     @Override
     public int getNumRecords() {

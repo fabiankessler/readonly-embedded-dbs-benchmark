@@ -5,16 +5,16 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 /**
- * Access to all {@link QueriesConfig query config setups}.
+ * Access to all {@link TestDbConfig query config setups}.
  *
  * @author Fabian Kessler
  */
 public class QueriesConfigs {
 
-    public static List<QueriesConfig> all() {
+    public static List<TestDbConfig> all() {
         return ImmutableList.of(
-                new FastQueriesConfig(),
-                new SlowQueriesConfig()
+                new FastTestDbConfig(),
+                new SlowTestDbConfig()
         );
     }
 
