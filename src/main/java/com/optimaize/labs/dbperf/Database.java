@@ -1,8 +1,10 @@
 package com.optimaize.labs.dbperf;
 
 import com.optimaize.labs.dbperf.h2.H2DbUtil;
+import com.optimaize.labs.dbperf.h2.H2PerformanceExecutor;
 import com.optimaize.labs.dbperf.h2.H2TestDbCreator;
 import com.optimaize.labs.dbperf.sqlite.SqliteDbUtil;
+import com.optimaize.labs.dbperf.sqlite.SqlitePerformanceExecutor;
 import com.optimaize.labs.dbperf.sqlite.SqliteTestDbCreator;
 
 import java.util.Locale;
@@ -23,8 +25,11 @@ public enum Database {
         @Override public DbUtil newDbUtil() {
             return new H2DbUtil();
         }
-        @Override public TestDbCreator makeTestDbCreator() {
+        @Override public TestDbCreator newTestDbCreator() {
             return new H2TestDbCreator();
+        }
+        @Override public PerformanceExecutor newPerformanceExecutor() {
+            return new H2PerformanceExecutor();
         }
     },
 
@@ -32,14 +37,18 @@ public enum Database {
         @Override public DbUtil newDbUtil() {
             return new SqliteDbUtil();
         }
-        @Override public TestDbCreator makeTestDbCreator() {
+        @Override public TestDbCreator newTestDbCreator() {
             return new SqliteTestDbCreator();
+        }
+        @Override public PerformanceExecutor newPerformanceExecutor() {
+            return new SqlitePerformanceExecutor();
         }
     };
 
 
     public abstract DbUtil newDbUtil();
-    public abstract TestDbCreator makeTestDbCreator();
+    public abstract TestDbCreator newTestDbCreator();
+    public abstract PerformanceExecutor newPerformanceExecutor();
 
     public String getTestDbPathToFile() {
         return Database.class.getResource("/temp/").getFile() + this.name().toLowerCase(Locale.ENGLISH)+"_";

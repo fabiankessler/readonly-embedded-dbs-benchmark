@@ -37,7 +37,7 @@ class DbTestRunnerImpl implements DbTestRunner {
     DbTestRunnerImpl(@NotNull DbTestRunConfig cfg) {
         this.cfg = cfg;
         this.dbUtil = cfg.getDatabase().newDbUtil();
-        this.testDbCreator = cfg.getDatabase().makeTestDbCreator();
+        this.testDbCreator = cfg.getDatabase().newTestDbCreator();
     }
 
 

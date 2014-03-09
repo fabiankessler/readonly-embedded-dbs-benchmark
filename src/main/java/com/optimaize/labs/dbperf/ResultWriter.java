@@ -18,18 +18,18 @@ public class ResultWriter {
 
     private void _print(List<TestResult> results) {
         for (TestResult result : results) {
+            DbTestRunConfig cfg = result.getDbTestRunner().getDbTestRunConfig();
             p("=====================================");
             p("Result: -----------------------------");
-            DbTestRunConfig cfg = result.getDbTestRunner().getDbTestRunConfig();
             p("  Times:");
             p("    total time:    "+result.getTotalTimeMs()+"ms");
             p("    longest query: "+result.getLongestQueryTimeMs()+"ms");
             p("  Config:");
-            p("    db:          "+cfg.getDatabase());
-            p("    connection:  "+ ((cfg.getConnectionPoolSize()==null) ? "single-shared" : "pool of "+cfg.getConnectionPoolSize()));
-            p("    thread-pool: "+ ((cfg.getThreadPoolSize()==null) ? "none, single-threaded" : "pool of "+cfg.getThreadPoolSize()));
-            p("    test db:     "+cfg.getNumRecords()+" records, "+(cfg.isIndexed() ? "indexed" : "not indexed"));
-            p("    test run:    "+cfg.getTestIterations()+" test iterations");
+            p("    db:            "+cfg.getDatabase());
+            p("    db connection: "+ ((cfg.getConnectionPoolSize()==null) ? "single-shared" : "pool of "+cfg.getConnectionPoolSize()));
+            p("    threads:       "+ ((cfg.getThreadPoolSize()==null) ? "single-threaded" : "thread-pool of "+cfg.getThreadPoolSize()));
+            p("    test db:       "+cfg.getNumRecords()+" records, "+(cfg.isIndexed() ? "indexed" : "not indexed"));
+            p("    test run:      "+cfg.getTestIterations()+" test iterations");
             p("=====================================");
         }
     }
