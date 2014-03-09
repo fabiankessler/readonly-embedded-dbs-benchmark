@@ -1,5 +1,6 @@
 package com.optimaize.labs.dbperf;
 
+import com.optimaize.labs.dbperf.testdbconfig.TestDbConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,27 +18,22 @@ public class RunConfig {
     @NotNull
     private final Database database;
 
-    private final int numRecords;
-    private final boolean indexed;
+    private final TestDbConfig testDbConfig;
 
     @Nullable
     private final Integer connectionPoolSize;
     @Nullable
     private final Integer threadPoolSize;
 
-    private final int testIterations;
 
     public RunConfig(@NotNull String name, @NotNull Database database,
-                     int numRecords, boolean indexed,
-                     @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
-                     int testIterations) {
+                     @NotNull TestDbConfig testDbConfig,
+                     @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize) {
         this.name = name;
         this.database = database;
-        this.numRecords = numRecords;
-        this.indexed = indexed;
+        this.testDbConfig = testDbConfig;
         this.connectionPoolSize = connectionPoolSize;
         this.threadPoolSize = threadPoolSize;
-        this.testIterations = testIterations;
     }
 
     @NotNull
@@ -50,12 +46,9 @@ public class RunConfig {
         return database;
     }
 
-    public int getNumRecords() {
-        return numRecords;
-    }
-
-    public boolean isIndexed() {
-        return indexed;
+    @NotNull
+    public TestDbConfig getTestDbConfig() {
+        return testDbConfig;
     }
 
     @Nullable
@@ -68,21 +61,15 @@ public class RunConfig {
         return threadPoolSize;
     }
 
-    public int getTestIterations() {
-        return testIterations;
-    }
-
 
     @Override
     public String toString() {
         return "DbTestRunConfig{" +
                 "name='" + name + '\'' +
                 ", database=" + database +
-                ", numRecords=" + numRecords +
-                ", indexed=" + indexed +
+                ", testDbConfig=" + testDbConfig +
                 ", connectionPoolSize=" + connectionPoolSize +
                 ", threadPoolSize=" + threadPoolSize +
-                ", testIterations=" + testIterations +
                 '}';
     }
 }

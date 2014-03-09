@@ -1,5 +1,7 @@
 package com.optimaize.labs.dbperf;
 
+import com.optimaize.labs.dbperf.testdbconfig.TestDbConfig;
+
 /**
  * Builder for {@link DbTestRunner}.
  *
@@ -10,13 +12,11 @@ public class DbTestRunnerBuilder {
     private String name;
     private Database database;
 
-    private int numRecords;
-    private boolean indexed;
+    private TestDbConfig testDbConfig;
 
     private Integer connectionPoolSize = null;
     private Integer threadPoolSize = null;
 
-    private int testIterations;
 
     public DbTestRunnerBuilder name(String name) {
         this.name = name;
@@ -28,13 +28,8 @@ public class DbTestRunnerBuilder {
         return this;
     }
 
-    public DbTestRunnerBuilder numRecords(int numRecords) {
-        this.numRecords = numRecords;
-        return this;
-    }
-
-    public DbTestRunnerBuilder indexed(boolean indexed) {
-        this.indexed = indexed;
+    public DbTestRunnerBuilder testDbConfig(TestDbConfig testDbConfig) {
+        this.testDbConfig = testDbConfig;
         return this;
     }
 
@@ -58,18 +53,12 @@ public class DbTestRunnerBuilder {
         return this;
     }
 
-    public DbTestRunnerBuilder testIterations(int testIterations) {
-        this.testIterations = testIterations;
-        return this;
-    }
-
 
     public DbTestRunner build() {
         RunConfig cfg = new RunConfig(
                 name, database,
-                numRecords, indexed,
-                connectionPoolSize, threadPoolSize,
-                testIterations
+                testDbConfig,
+                connectionPoolSize, threadPoolSize
         );
         return new DbTestRunnerImpl(cfg);
     }

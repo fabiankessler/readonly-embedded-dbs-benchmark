@@ -50,11 +50,9 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("singleSharedConnection")
                 .database(Database.SQLITE)
-                .numRecords(testDbConfig.getNumRecords())
-                .indexed(testDbConfig.isIndexed())
+                .testDbConfig(testDbConfig)
                 .singleSharedConnection()
                 .threadPool(10)
-                .testIterations(testDbConfig.getTestIterations())
                 .build();
         return run(runner);
     }
@@ -63,11 +61,9 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("connectionPool")
                 .database(Database.SQLITE)
-                .numRecords(testDbConfig.getNumRecords())
-                .indexed(testDbConfig.isIndexed())
+                .testDbConfig(testDbConfig)
                 .connectionPool(10)
                 .threadPool(10)
-                .testIterations(testDbConfig.getTestIterations())
                 .build();
         return run(runner);
     }

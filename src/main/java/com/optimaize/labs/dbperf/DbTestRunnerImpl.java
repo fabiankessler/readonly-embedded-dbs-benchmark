@@ -52,7 +52,7 @@ class DbTestRunnerImpl implements DbTestRunner {
 
     @Override
     public void prepare() throws IOException, SQLException {
-        testDbCreator.create(cfg.getName(), cfg.getNumRecords(), cfg.isIndexed());
+        testDbCreator.create(cfg.getName(), cfg.getTestDbConfig().getNumRecords(), cfg.getTestDbConfig().isIndexed());
     }
 
     @Override
@@ -74,8 +74,8 @@ class DbTestRunnerImpl implements DbTestRunner {
         Stopwatch totaltime = Stopwatch.createStarted();
         ConcurrentMaxCollector maxCollector = ConcurrentMaxCollector.create(0L);
 
-        for (int loop=0; loop<cfg.getTestIterations(); loop++) {
-            for (int i=0; i<cfg.getNumRecords(); i++) {
+        for (int loop=0; loop<cfg.getTestDbConfig().getTestIterations(); loop++) {
+            for (int i=0; i<cfg.getTestDbConfig().getNumRecords(); i++) {
                 submit(i, maxCollector);
             }
         }
