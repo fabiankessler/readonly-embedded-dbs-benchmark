@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf;
+package com.optimaize.labs.dbperf.testdbconfig;
 
 /**
  * Configuration for fast (indexed) queries that only take a few ms per query, and thus don't let others

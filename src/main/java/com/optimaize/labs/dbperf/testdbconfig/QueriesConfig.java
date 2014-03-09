@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf;
+package com.optimaize.labs.dbperf.testdbconfig;
 
 /**
  * Configuration for the test run.
