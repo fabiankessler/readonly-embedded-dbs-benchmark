@@ -1,10 +1,7 @@
 package com.optimaize.labs.dbperf.sqlite;
 
 import com.google.common.collect.ImmutableList;
-import com.optimaize.labs.dbperf.Database;
-import com.optimaize.labs.dbperf.DbTestRunner;
-import com.optimaize.labs.dbperf.DbTestRunnerBuilder;
-import com.optimaize.labs.dbperf.TestResult;
+import com.optimaize.labs.dbperf.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,16 +12,17 @@ import java.util.List;
  *
  * @author Fabian Kessler
  */
-public class SqlitePerformanceExecutor {
+public class SqlitePerformanceExecutor implements PerformanceExecutor {
 
     public static void main(String[] args) throws IOException, SQLException {
         SqlitePerformanceExecutor executor = new SqlitePerformanceExecutor();
-        System.out.println(executor.all());
+        new ResultWriter().print( executor.all() );
     }
 
     public SqlitePerformanceExecutor() {
     }
 
+    @Override
     public List<TestResult> all() throws IOException, SQLException {
         return ImmutableList.of(
             singleSharedConnection(),
