@@ -71,6 +71,17 @@ There you can for example change the number of records in the test db.
 * See GitHub Issues list.
 
 
+### Test Data Structure
+
+The test database table contains 1-n records. There are tests with varying sizes.
+
+Each record has a numerical incrementing primary key starting starting at 1,
+and a text field that stores the md5 value of the pk (eg 1 = "c4ca4238a0b923820dcc509a6f75849b").
+
+Queries are run against that md5 field. There are 'fast' query tests where this field
+has an index, and 'slow' where not.
+
+
 ### Results
 
 Tiny db, fast queries. SQLite with a single-shared db connection wins.
