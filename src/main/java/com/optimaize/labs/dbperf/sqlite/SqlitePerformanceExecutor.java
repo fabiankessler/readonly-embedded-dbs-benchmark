@@ -1,25 +1,41 @@
 package com.optimaize.labs.dbperf.sqlite;
 
+import com.google.common.collect.ImmutableList;
 import com.optimaize.labs.dbperf.Database;
 import com.optimaize.labs.dbperf.DbTestRunner;
 import com.optimaize.labs.dbperf.DbTestRunnerBuilder;
 import com.optimaize.labs.dbperf.TestResult;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Stress-tests sqlite readonly with many threads for a while.
  *
  * @author Fabian Kessler
  */
-public class SqliteTest {
+public class SqlitePerformanceExecutor {
 
-    @Test
-    public void a_singleSharedConnection() throws IOException, SQLException {
+    public static void main(String[] args) throws IOException, SQLException {
+        SqlitePerformanceExecutor executor = new SqlitePerformanceExecutor();
+        System.out.println(executor.all());
+    }
+
+    public SqlitePerformanceExecutor() {
+    }
+
+    public List<TestResult> all() throws IOException, SQLException {
+        return ImmutableList.of(
+            singleSharedConnection(),
+            connectionPool()
+        );
+    }
+
+
+    public TestResult singleSharedConnection() throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
-                .name("a")
+                .name("singleSharedConnection")
                 .database(Database.SQLITE)
                 .numRecords(10000)
                 .indexed(true)
@@ -27,14 +43,12 @@ public class SqliteTest {
                 .threadPool(10)
                 .testIterations(1)
                 .build();
-        TestResult testResult = run(runner);
-        System.out.println(testResult);
+        return run(runner);
     }
 
-    @Test
-    public void b_connectionPool() throws IOException, SQLException {
+    public TestResult connectionPool() throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
-                .name("b")
+                .name("connectionPool")
                 .database(Database.SQLITE)
                 .numRecords(10000)
                 .indexed(true)
@@ -42,8 +56,7 @@ public class SqliteTest {
                 .threadPool(10)
                 .testIterations(1)
                 .build();
-        TestResult testResult = run(runner);
-        System.out.println(testResult);
+        return run(runner);
     }
 
     private TestResult run(DbTestRunner runner) throws IOException, SQLException {

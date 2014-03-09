@@ -21,19 +21,7 @@ import java.util.concurrent.TimeUnit;
 class DbTestRunnerImpl implements DbTestRunner {
 
     @NotNull
-    private final String name;
-    @NotNull
-    private final Database database;
-
-    private final int numRecords;
-    private final boolean indexed;
-
-    @Nullable
-    private final Integer connectionPoolSize;
-    @Nullable
-    private final Integer threadPoolSize;
-
-    private final int testIterations;
+    private final DbTestRunConfig cfg;
 
     private final DbUtil dbUtil;
     private final TestDbCreator testDbCreator;
@@ -46,42 +34,35 @@ class DbTestRunnerImpl implements DbTestRunner {
     private ComboPooledDataSource dbConnectionPool;
 
 
-    DbTestRunnerImpl(@NotNull String name, @NotNull Database database,
-                     int numRecords, boolean indexed,
-                     @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
-                     int testIterations) {
-        this.name = name;
-        this.database = database;
+    DbTestRunnerImpl(@NotNull DbTestRunConfig cfg) {
+        this.cfg = cfg;
+        this.dbUtil = cfg.getDatabase().newDbUtil();
+        this.testDbCreator = cfg.getDatabase().makeTestDbCreator();
+    }
 
-        this.dbUtil = database.newDbUtil();
-        this.testDbCreator = database.makeTestDbCreator();
 
-        this.connectionPoolSize = connectionPoolSize;
-        this.threadPoolSize = threadPoolSize;
-
-        this.numRecords = numRecords;
-        this.indexed = indexed;
-
-        this.testIterations = testIterations;
+    @NotNull @Override
+    public DbTestRunConfig getDbTestRunConfig() {
+        return cfg;
     }
 
     @Override
     public void prepare() throws IOException, SQLException {
-        testDbCreator.create(name, numRecords, indexed);
+        testDbCreator.create(cfg.getName(), cfg.getNumRecords(), cfg.isIndexed());
     }
 
     @Override
     public TestResult run() {
-        if (connectionPoolSize != null) {
+        if (cfg.getConnectionPoolSize() != null) {
             this.dbSingleConnection = null;
-            this.dbConnectionPool = makeConnectionPool(connectionPoolSize);
+            this.dbConnectionPool = makeConnectionPool(cfg.getConnectionPoolSize());
         } else {
-            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()+name));
+            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(cfg.getDatabase().getTestDbPathToFile()+cfg.getName()));
             dbUtil.setPropertiesForReadonly(this.dbSingleConnection);
             this.dbConnectionPool = null;
         }
-        if (threadPoolSize != null) {
-            this.threadPoolExecutor = Util.makeExecutor(threadPoolSize);
+        if (cfg.getThreadPoolSize() != null) {
+            this.threadPoolExecutor = Util.makeExecutor(cfg.getThreadPoolSize());
         } else {
             this.threadPoolExecutor = null;
         }
@@ -89,8 +70,8 @@ class DbTestRunnerImpl implements DbTestRunner {
         Stopwatch totaltime = Stopwatch.createStarted();
         ConcurrentMaxCollector maxCollector = ConcurrentMaxCollector.create(0L);
 
-        for (int loop=0; loop<testIterations; loop++) {
-            for (int i=0; i<numRecords; i++) {
+        for (int loop=0; loop<cfg.getTestIterations(); loop++) {
+            for (int i=0; i<cfg.getNumRecords(); i++) {
                 submit(i, maxCollector);
             }
         }
@@ -99,14 +80,14 @@ class DbTestRunnerImpl implements DbTestRunner {
             shutdown(threadPoolExecutor);
         }
 
-        return new TestResult(totaltime.elapsed(TimeUnit.MILLISECONDS), maxCollector.getBest());
+        return new TestResult(this, totaltime.elapsed(TimeUnit.MILLISECONDS), maxCollector.getBest());
     }
 
     @Override
     public void cleanup(boolean throwOnFailure) {
         closeDbConnections();
         try {
-            testDbCreator.delete(name);
+            testDbCreator.delete(cfg.getName());
         } catch (RuntimeException e) {
             if (throwOnFailure) {
                 throw e;
@@ -210,7 +191,7 @@ class DbTestRunnerImpl implements DbTestRunner {
         try {
             ComboPooledDataSource cpds = new ComboPooledDataSource();
             cpds.setDriverClass(dbUtil.getDriverClassName());
-            cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()+name));
+            cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(cfg.getDatabase().getTestDbPathToFile()+cfg.getName()));
             cpds.setInitialPoolSize(0);
             cpds.setMinPoolSize(0);
             cpds.setMaxPoolSize(connPoolSize);
@@ -221,5 +202,13 @@ class DbTestRunnerImpl implements DbTestRunner {
         } catch (PropertyVetoException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return "DbTestRunnerImpl{" +
+                "cfg='" + cfg + '\'' +
+                '}';
     }
 }

@@ -65,11 +65,13 @@ public class DbTestRunnerBuilder {
 
 
     public DbTestRunner build() {
-        return new DbTestRunnerImpl(
+        DbTestRunConfig cfg = new DbTestRunConfig(
                 name, database,
                 numRecords, indexed,
                 connectionPoolSize, threadPoolSize,
-                testIterations);
+                testIterations
+        );
+        return new DbTestRunnerImpl(cfg);
     }
 
 }
