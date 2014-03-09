@@ -1,50 +1,19 @@
 package com.optimaize.labs.dbperf;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
- * ...
+ * Runs a test. Use the {@link DbTestRunnerBuilder}.
  *
  * @author Fabian Kessler
  */
-class DbTestRunner {
+public interface DbTestRunner {
 
-    @NotNull
-    private Database database;
+    void prepare() throws IOException, SQLException;
 
-    private int numRecords;
-    private boolean indexed;
+    TestResult run();
 
-    @Nullable
-    private Integer connectionPoolSize = null;
-    @Nullable
-    private Integer threadPoolSize = null;
-
-    private int testIterations;
-
-    DbTestRunner(@NotNull Database database,
-                 int numRecords, boolean indexed,
-                 @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
-                 int testIterations) {
-        this.database = database;
-        this.numRecords = numRecords;
-        this.indexed = indexed;
-        this.connectionPoolSize = connectionPoolSize;
-        this.threadPoolSize = threadPoolSize;
-        this.testIterations = testIterations;
-    }
-
-    public void prepare() {
-
-    }
-
-    public void run() {
-
-    }
-
-    public void cleanup() {
-
-    }
+    void cleanup();
 
 }

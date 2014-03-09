@@ -1,12 +1,11 @@
 package com.optimaize.labs.dbperf;
 
 /**
- * ...
+ * Builder for {@link DbTestRunnerImpl}.
  *
  * @author Fabian Kessler
  */
-class TestBuilder {
-
+public class DbTestRunnerBuilder {
 
     private Database database;
 
@@ -19,49 +18,49 @@ class TestBuilder {
     private int testIterations;
 
 
-    public TestBuilder database(Database database) {
+    public DbTestRunnerBuilder database(Database database) {
         this.database = database;
         return this;
     }
 
-    public TestBuilder numRecords(int numRecords) {
+    public DbTestRunnerBuilder numRecords(int numRecords) {
         this.numRecords = numRecords;
         return this;
     }
 
-    public TestBuilder indexed(boolean indexed) {
+    public DbTestRunnerBuilder indexed(boolean indexed) {
         this.indexed = indexed;
         return this;
     }
 
-    public TestBuilder connectionPool(int poolSize) {
+    public DbTestRunnerBuilder connectionPool(int poolSize) {
         if (poolSize<1) throw new IllegalArgumentException();
         this.connectionPoolSize = poolSize;
         return this;
     }
-    public TestBuilder singleSharedConnection() {
+    public DbTestRunnerBuilder singleSharedConnection() {
         this.connectionPoolSize = null;
         return this;
     }
 
-    public TestBuilder threadPool(int poolSize) {
+    public DbTestRunnerBuilder threadPool(int poolSize) {
         if (poolSize<1) throw new IllegalArgumentException();
         this.threadPoolSize = poolSize;
         return this;
     }
-    public TestBuilder singleThreaded() {
+    public DbTestRunnerBuilder singleThreaded() {
         this.threadPoolSize = null;
         return this;
     }
 
-    public TestBuilder testIterations(int testIterations) {
+    public DbTestRunnerBuilder testIterations(int testIterations) {
         this.testIterations = testIterations;
         return this;
     }
 
 
     public DbTestRunner build() {
-        return new DbTestRunner(
+        return new DbTestRunnerImpl(
                 database,
                 numRecords, indexed,
                 connectionPoolSize, threadPoolSize,

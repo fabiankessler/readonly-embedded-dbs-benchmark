@@ -11,6 +11,13 @@ import java.sql.SQLException;
  */
 public class SqliteDbUtil implements DbUtil {
 
+
+    @Override
+    public String getDriverClassName() {
+        return "org.sqlite.JDBC";
+    }
+
+
     @Override
     public String connectionStringForImporting(String pathWithFilename) {
         if (new File(pathWithFilename).exists()) {

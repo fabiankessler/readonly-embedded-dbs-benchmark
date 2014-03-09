@@ -9,10 +9,11 @@ import java.sql.Connection;
  */
 public interface DbUtil {
 
+    String getDriverClassName();
+
     String connectionStringForImporting(String pathWithFilename);
     String connectionStringForReadonly(String pathWithFilename);
 
     void setPropertiesForImporting(Connection connection);
     void setPropertiesForReadonly(Connection connection);
-
 }

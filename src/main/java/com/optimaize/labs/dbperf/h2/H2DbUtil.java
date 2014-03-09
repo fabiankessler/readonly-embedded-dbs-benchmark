@@ -14,6 +14,11 @@ public class H2DbUtil implements DbUtil {
 
 
     @Override
+    public String getDriverClassName() {
+        return "org.h2.Driver";
+    }
+
+    @Override
     public String connectionStringForImporting(String pathWithFilename) {
         if (new File(pathWithFilename).exists()) {
             throw new IllegalArgumentException("Already exists, clean up first: "+pathWithFilename);

@@ -1,5 +1,6 @@
 package com.optimaize.labs.dbperf.h2;
 
+import com.optimaize.labs.dbperf.Database;
 import com.optimaize.labs.dbperf.DbUtil;
 import com.optimaize.labs.dbperf.TestDbCreator;
 import com.optimaize.labs.dbperf.Util;
@@ -14,12 +15,6 @@ import java.sql.Statement;
  */
 public class H2TestDbCreator implements TestDbCreator {
 
-    private static final String dbFilePath = H2TestDbCreator.class.getResource("/").getFile();
-    /**
-     * This db file is used for testing but it is not touched, it is copied to dbFilePathToTest.
-     */
-    private static final String dbFilePathToCopy = dbFilePath+"/h2_performance";
-
     private static final DbUtil dbUtil = new H2DbUtil();
 
     /**
@@ -27,7 +22,7 @@ public class H2TestDbCreator implements TestDbCreator {
      */
     @Override
     public void create(int numRecords, boolean withIndex) throws SQLException, IOException {
-        String connString = dbUtil.connectionStringForImporting(dbFilePathToCopy);
+        String connString = dbUtil.connectionStringForImporting(Database.H2.getTestDbPathToFile());
         Connection conn = Util.makeSingleConnection(connString);
         dbUtil.setPropertiesForImporting(conn);
         Statement statement = conn.createStatement();
@@ -45,7 +40,7 @@ public class H2TestDbCreator implements TestDbCreator {
 
     @Override
     public void delete() {
-        File dbFile = new File(dbFilePathToCopy);
+        File dbFile = new File(Database.H2.getTestDbPathToFile());
         if (dbFile.exists()) {
             //noinspection ResultOfMethodCallIgnored
             dbFile.delete();
