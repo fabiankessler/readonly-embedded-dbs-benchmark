@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf;
+package com.optimaize.labs.dbperf.util;
 
 import com.google.common.base.Stopwatch;
 

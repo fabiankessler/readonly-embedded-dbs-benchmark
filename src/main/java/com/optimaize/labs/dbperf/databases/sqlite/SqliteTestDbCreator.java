@@ -3,7 +3,7 @@ package com.optimaize.labs.dbperf.databases.sqlite;
 import com.optimaize.labs.dbperf.Database;
 import com.optimaize.labs.dbperf.DbUtil;
 import com.optimaize.labs.dbperf.TestDbCreator;
-import com.optimaize.labs.dbperf.Util;
+import com.optimaize.labs.dbperf.util.Util;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,6 +2,8 @@ package com.optimaize.labs.dbperf;
 
 import com.google.common.base.Stopwatch;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.optimaize.labs.dbperf.util.ConcurrentMaxCollector;
+import com.optimaize.labs.dbperf.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,7 +59,7 @@ class DbTestRunnerImpl implements DbTestRunner {
             this.dbSingleConnection = null;
             this.dbConnectionPool = makeConnectionPool(cfg.getConnectionPoolSize());
         } else {
-            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(cfg.getDatabase().getTestDbPathToFile()+cfg.getName()));
+            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(cfg.getDatabase().getTestDbPathToFile() + cfg.getName()));
             dbUtil.setPropertiesForReadonly(this.dbSingleConnection);
             this.dbConnectionPool = null;
         }

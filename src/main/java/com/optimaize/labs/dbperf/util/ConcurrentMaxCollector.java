@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf;
+package com.optimaize.labs.dbperf.util;
 
 import java.util.concurrent.atomic.AtomicLong;
 
