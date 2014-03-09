@@ -32,6 +32,29 @@ The connection options are:
 * connection pool
 
 
+### Conclusion
+
+These are my current findings from what I've learned from these tests, and what I've read on the net.
+Please correct me if I'm wrong, and my setup can be improved for a certain use case.
+
+For fast queries:
+
+* SQLite is 2x as fast as H2 for very small data
+* H2 is faster the larger the db gets
+
+For slow queries:
+
+* SQLite with connection pool wins. This is the only acceptable setup.
+* H2 uses synchronization internally, and that behaves as it was single-threaded.
+  When one query takes long, others effectively have to wait. Even if all queries
+  are read-only.
+
+Therefore: If you know that you don't have any slow queries ever, you can choose the
+best setup based on the numbers; SQLite for tiny, H2 for larger DBs.
+
+If you possibly or certainly have slow queries, with concurrent requests,
+*SQLite with a thread pool is the only viable option*.
+
 
 ### How To Use
 
@@ -45,7 +68,15 @@ There you can for example change the number of records in the test db.
 
 ### Open Questions
 
-(todo write)
+(none right now)
+
+
+### TODO
+
+* Verify that the setup/connection code is the best possible for each db.
+  (Pragmas for SQLite, connection string for H2)
+* Memory tuning (larger page size for SQLite than the default)
+* Memory footprint measurement (H2 gc)
 
 
 ### Results
