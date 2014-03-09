@@ -14,6 +14,6 @@ public interface DbTestRunner {
 
     TestResult run();
 
-    void cleanup();
+    void cleanup(boolean throwOnFailure);
 
 }

@@ -17,23 +17,41 @@ import java.sql.SQLException;
 public class SqliteTest {
 
     @Test
-    public void test() throws IOException, SQLException {
+    public void a_singleSharedConnection() throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
+                .name("a")
                 .database(Database.SQLITE)
                 .numRecords(10000)
                 .indexed(true)
-//                .connectionPool(20)
                 .singleSharedConnection()
                 .threadPool(10)
-                .testIterations(10)
+                .testIterations(1)
                 .build();
+        TestResult testResult = run(runner);
+        System.out.println(testResult);
+    }
 
-        runner.cleanup();
+    @Test
+    public void b_connectionPool() throws IOException, SQLException {
+        DbTestRunner runner = new DbTestRunnerBuilder()
+                .name("b")
+                .database(Database.SQLITE)
+                .numRecords(10000)
+                .indexed(true)
+                .connectionPool(10)
+                .threadPool(10)
+                .testIterations(1)
+                .build();
+        TestResult testResult = run(runner);
+        System.out.println(testResult);
+    }
+
+    private TestResult run(DbTestRunner runner) throws IOException, SQLException {
+        runner.cleanup(true);
         runner.prepare();
         TestResult testResult = runner.run();
-        runner.cleanup();
-        System.out.println(testResult);
-        System.exit(0);
+        runner.cleanup(false);
+        return testResult;
     }
 
 }

@@ -10,8 +10,8 @@ import java.sql.SQLException;
  */
 public interface TestDbCreator {
 
-    void create(int numRecords, boolean withIndex) throws SQLException, IOException;
+    void create(String name, int numRecords, boolean withIndex) throws SQLException, IOException;
 
-    void delete();
+    void delete(String name);
 
 }

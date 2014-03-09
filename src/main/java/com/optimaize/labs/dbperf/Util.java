@@ -1,5 +1,7 @@
 package com.optimaize.labs.dbperf;
 
+import com.google.common.base.Stopwatch;
+
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -63,6 +65,29 @@ public class Util {
                 new ThreadPoolExecutor.CallerRunsPolicy()
                 //new ThreadPoolExecutor.AbortPolicy()
         );
+    }
+
+
+    public static void deleteFile(File file, int maxWaitMsBeforeThrowing) {
+        if (!file.delete() && file.exists()) {
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            do {
+                if (!file.exists()) {
+                    return;
+                } else {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        if (!file.exists()) {
+                            return;
+                        } else {
+                            throw new RuntimeException("Failed deleting db file (probably still locked): "+file);
+                        }
+                    }
+                }
+            } while (stopwatch.elapsed(TimeUnit.MILLISECONDS) < maxWaitMsBeforeThrowing);
+            throw new RuntimeException("Failed deleting db file (probably still locked), gave up waiting: "+file);
+        }
     }
 
 }

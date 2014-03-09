@@ -42,7 +42,7 @@ public enum Database {
     public abstract TestDbCreator makeTestDbCreator();
 
     public String getTestDbPathToFile() {
-        return Database.class.getResource("/temp/").getFile() + this.name().toLowerCase(Locale.ENGLISH)+"_performance";
+        return Database.class.getResource("/temp/").getFile() + this.name().toLowerCase(Locale.ENGLISH)+"_";
     }
 
 }

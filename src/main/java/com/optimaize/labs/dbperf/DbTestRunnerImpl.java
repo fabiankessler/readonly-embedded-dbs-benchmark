@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 class DbTestRunnerImpl implements DbTestRunner {
 
     @NotNull
+    private final String name;
+    @NotNull
     private final Database database;
 
     private final int numRecords;
@@ -44,10 +46,11 @@ class DbTestRunnerImpl implements DbTestRunner {
     private ComboPooledDataSource dbConnectionPool;
 
 
-    DbTestRunnerImpl(@NotNull Database database,
+    DbTestRunnerImpl(@NotNull String name, @NotNull Database database,
                      int numRecords, boolean indexed,
                      @Nullable Integer connectionPoolSize, @Nullable Integer threadPoolSize,
                      int testIterations) {
+        this.name = name;
         this.database = database;
 
         this.dbUtil = database.newDbUtil();
@@ -64,7 +67,7 @@ class DbTestRunnerImpl implements DbTestRunner {
 
     @Override
     public void prepare() throws IOException, SQLException {
-        testDbCreator.create(numRecords, indexed);
+        testDbCreator.create(name, numRecords, indexed);
     }
 
     @Override
@@ -73,7 +76,7 @@ class DbTestRunnerImpl implements DbTestRunner {
             this.dbSingleConnection = null;
             this.dbConnectionPool = makeConnectionPool(connectionPoolSize);
         } else {
-            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()));
+            this.dbSingleConnection = Util.makeSingleConnection(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()+name));
             dbUtil.setPropertiesForReadonly(this.dbSingleConnection);
             this.dbConnectionPool = null;
         }
@@ -100,8 +103,32 @@ class DbTestRunnerImpl implements DbTestRunner {
     }
 
     @Override
-    public void cleanup() {
-        testDbCreator.delete();
+    public void cleanup(boolean throwOnFailure) {
+        closeDbConnections();
+        try {
+            testDbCreator.delete(name);
+        } catch (RuntimeException e) {
+            if (throwOnFailure) {
+                throw e;
+            } else {
+                //never mind
+            }
+        }
+    }
+
+    private void closeDbConnections() {
+        if (dbSingleConnection!=null) {
+            try {
+                dbSingleConnection.close();
+                dbSingleConnection = null;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (dbConnectionPool!=null) {
+            dbConnectionPool.close();
+            dbConnectionPool = null;
+        }
     }
 
 
@@ -143,13 +170,18 @@ class DbTestRunnerImpl implements DbTestRunner {
 
 
     private JdbcTemplate getJdbcTemplate() {
-        return new JdbcTemplate(getDataSource());
+        if (this.dbSingleConnection != null) {
+            return new JdbcTemplate(getDataSource());
+        } else {
+            assert dbConnectionPool != null;
+            return new JdbcTemplate(dbConnectionPool);
+        }
     }
 
     private DataSource getDataSource() {
         return new SingleConnectionDataSource(
                 getConnection(),
-                true  //otherwise we get connection closed errors.
+                false  //TODO do we want this?
         );
     }
 
@@ -178,9 +210,12 @@ class DbTestRunnerImpl implements DbTestRunner {
         try {
             ComboPooledDataSource cpds = new ComboPooledDataSource();
             cpds.setDriverClass(dbUtil.getDriverClassName());
-            cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()));
+            cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(database.getTestDbPathToFile()+name));
+            cpds.setInitialPoolSize(0);
+            cpds.setMinPoolSize(0);
             cpds.setMaxPoolSize(connPoolSize);
-            cpds.setMinPoolSize(connPoolSize);
+            cpds.setMaxIdleTime(0);
+            cpds.setMaxIdleTimeExcessConnections(0);
             //cpds.setAcquireIncrement(Accomodation);
             return cpds;
         } catch (PropertyVetoException ex) {

@@ -7,6 +7,7 @@ package com.optimaize.labs.dbperf;
  */
 public class DbTestRunnerBuilder {
 
+    private String name;
     private Database database;
 
     private int numRecords;
@@ -17,6 +18,10 @@ public class DbTestRunnerBuilder {
 
     private int testIterations;
 
+    public DbTestRunnerBuilder name(String name) {
+        this.name = name;
+        return this;
+    }
 
     public DbTestRunnerBuilder database(Database database) {
         this.database = database;
@@ -61,7 +66,7 @@ public class DbTestRunnerBuilder {
 
     public DbTestRunner build() {
         return new DbTestRunnerImpl(
-                database,
+                name, database,
                 numRecords, indexed,
                 connectionPoolSize, threadPoolSize,
                 testIterations);

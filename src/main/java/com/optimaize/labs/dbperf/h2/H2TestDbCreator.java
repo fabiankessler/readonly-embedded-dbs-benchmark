@@ -21,8 +21,8 @@ public class H2TestDbCreator implements TestDbCreator {
      * @param numRecords eg 10000
      */
     @Override
-    public void create(int numRecords, boolean withIndex) throws SQLException, IOException {
-        String connString = dbUtil.connectionStringForImporting(Database.H2.getTestDbPathToFile());
+    public void create(String name, int numRecords, boolean withIndex) throws SQLException, IOException {
+        String connString = dbUtil.connectionStringForImporting(Database.H2.getTestDbPathToFile()+name);
         Connection conn = Util.makeSingleConnection(connString);
         dbUtil.setPropertiesForImporting(conn);
         Statement statement = conn.createStatement();
@@ -39,11 +39,10 @@ public class H2TestDbCreator implements TestDbCreator {
     }
 
     @Override
-    public void delete() {
-        File dbFile = new File(Database.H2.getTestDbPathToFile());
+    public void delete(String name) {
+        File dbFile = new File(Database.H2.getTestDbPathToFile()+name);
         if (dbFile.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            dbFile.delete();
+            Util.deleteFile(dbFile, 1000);
         }
     }
 
