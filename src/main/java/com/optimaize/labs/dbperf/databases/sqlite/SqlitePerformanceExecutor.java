@@ -1,6 +1,7 @@
 package com.optimaize.labs.dbperf.databases.sqlite;
 
 import com.optimaize.labs.dbperf.*;
+import com.optimaize.labs.dbperf.databases.PerformanceExecutor;
 
 import java.io.IOException;
 import java.sql.SQLException;

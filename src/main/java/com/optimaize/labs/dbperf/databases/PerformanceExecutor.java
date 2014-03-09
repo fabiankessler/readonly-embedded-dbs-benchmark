@@ -1,4 +1,7 @@
-package com.optimaize.labs.dbperf;
+package com.optimaize.labs.dbperf.databases;
+
+import com.optimaize.labs.dbperf.QueriesConfig;
+import com.optimaize.labs.dbperf.TestResult;
 
 import java.io.IOException;
 import java.sql.SQLException;

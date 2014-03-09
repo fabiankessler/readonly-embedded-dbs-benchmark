@@ -1,6 +1,6 @@
 package com.optimaize.labs.dbperf.databases.h2;
 
-import com.optimaize.labs.dbperf.DbUtil;
+import com.optimaize.labs.dbperf.databases.DbUtil;
 
 import java.io.File;
 import java.sql.Connection;
