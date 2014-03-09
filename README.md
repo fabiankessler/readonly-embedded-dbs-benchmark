@@ -66,17 +66,9 @@ To change a different scenario, take a look at QueriesConfigs to add or modify w
 There you can for example change the number of records in the test db.
 
 
-### Open Questions
+### Open Questions / TODO
 
-(none right now)
-
-
-### TODO
-
-* Verify that the setup/connection code is the best possible for each db.
-  (Pragmas for SQLite, connection string for H2)
-* Memory tuning (larger page size for SQLite than the default)
-* Memory footprint measurement (H2 gc)
+* See GitHub Issues list.
 
 
 ### Results
@@ -120,7 +112,6 @@ Tiny db, fast queries. SQLite with a single-shared db connection wins.
         Times:
           total time:    2295ms
           longest query: 211ms
-    =====================================
 
 
 Small db, fast queries. H2 with a connection pool wins.
@@ -161,7 +152,6 @@ Small db, fast queries. H2 with a connection pool wins.
         Times:
           total time:    11131ms
           longest query: 238ms
-    Done!
 
 
 Large db, fast queries. H2 with a single-shared db connection wins.
@@ -202,7 +192,6 @@ Large db, fast queries. H2 with a single-shared db connection wins.
         Times:
           total time:    105040ms
           longest query: 185ms
-    =====================================
 
 
 Small db, slow queries. SQLite with a connection pool wins.
@@ -243,4 +232,3 @@ Small db, slow queries. SQLite with a connection pool wins.
         Times:
           total time:    24663ms
           longest query: 132ms
-    =====================================
