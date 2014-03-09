@@ -32,9 +32,6 @@ The connection options are:
 * connection pool
 
 
-### Results
-
-(todo insert)
 
 ### How To Use
 
@@ -50,3 +47,169 @@ There you can for example change the number of records in the test db.
 
 (todo write)
 
+
+### Results
+
+Tiny db, fast queries. SQLite with a single-shared db connection wins.
+
+    =====================================
+    DB Config
+      test db:       1000 records, indexed
+      test run:      10 test iterations
+    Results: --------------------------
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    953ms
+          longest query: 35ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    1054ms
+          longest query: 48ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    1933ms
+          longest query: 100ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    2295ms
+          longest query: 211ms
+    =====================================
+
+
+Small db, fast queries. H2 with a connection pool wins.
+
+    DB Config
+      test db:       10000 records, indexed
+      test run:      10 test iterations
+    Results: --------------------------
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    2271ms
+          longest query: 99ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    3074ms
+          longest query: 91ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    7104ms
+          longest query: 112ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    11131ms
+          longest query: 238ms
+    Done!
+
+
+Large db, fast queries. H2 with a single-shared db connection wins.
+
+    DB Config
+      test db:       1000000 records, indexed
+      test run:      1 test iterations
+    Results: --------------------------
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    38244ms
+          longest query: 167ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    42369ms
+          longest query: 155ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    96514ms
+          longest query: 323ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    105040ms
+          longest query: 185ms
+    =====================================
+
+
+Small db, slow queries. SQLite with a connection pool wins.
+
+    DB Config
+      test db:       10000 records, not indexed
+      test run:      1 test iterations
+    Results: --------------------------
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    9134ms
+          longest query: 173ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    21439ms
+          longest query: 172ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    24400ms
+          longest query: 122ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: pool of 10
+          threads:       thread-pool of 10
+        Times:
+          total time:    24663ms
+          longest query: 132ms
+    =====================================
