@@ -1,11 +1,11 @@
 package com.optimaize.labs.dbperf;
 
-import com.optimaize.labs.dbperf.h2.H2DbUtil;
-import com.optimaize.labs.dbperf.h2.H2PerformanceExecutor;
-import com.optimaize.labs.dbperf.h2.H2TestDbCreator;
-import com.optimaize.labs.dbperf.sqlite.SqliteDbUtil;
-import com.optimaize.labs.dbperf.sqlite.SqlitePerformanceExecutor;
-import com.optimaize.labs.dbperf.sqlite.SqliteTestDbCreator;
+import com.optimaize.labs.dbperf.databases.h2.H2DbUtil;
+import com.optimaize.labs.dbperf.databases.h2.H2PerformanceExecutor;
+import com.optimaize.labs.dbperf.databases.h2.H2TestDbCreator;
+import com.optimaize.labs.dbperf.databases.sqlite.SqliteDbUtil;
+import com.optimaize.labs.dbperf.databases.sqlite.SqlitePerformanceExecutor;
+import com.optimaize.labs.dbperf.databases.sqlite.SqliteTestDbCreator;
 
 import java.util.Locale;
 

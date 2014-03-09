@@ -3,4 +3,4 @@
  *
  * @author Fabian Kessler
  */
-package com.optimaize.labs.dbperf.h2;
+package com.optimaize.labs.dbperf.databases.h2;

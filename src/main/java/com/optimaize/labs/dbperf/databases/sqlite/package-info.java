@@ -3,4 +3,4 @@
  *
  * @author Fabian Kessler
  */
-package com.optimaize.labs.dbperf.sqlite;
+package com.optimaize.labs.dbperf.databases.sqlite;

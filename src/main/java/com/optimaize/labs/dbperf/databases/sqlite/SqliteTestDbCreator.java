@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf.sqlite;
+package com.optimaize.labs.dbperf.databases.sqlite;
 
 import com.optimaize.labs.dbperf.Database;
 import com.optimaize.labs.dbperf.DbUtil;

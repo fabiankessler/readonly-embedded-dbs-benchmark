@@ -1,4 +1,4 @@
-package com.optimaize.labs.dbperf.sqlite;
+package com.optimaize.labs.dbperf.databases.h2;
 
 import com.optimaize.labs.dbperf.*;
 
@@ -8,21 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stress-tests sqlite readonly with many threads for a while.
+ * Stress-tests h2 readonly with many threads for a while.
  *
  * @author Fabian Kessler
  */
-public class SqlitePerformanceExecutor implements PerformanceExecutor {
+public class H2PerformanceExecutor implements PerformanceExecutor {
 
     /**
-     * Runs all sqlite tests.
+     * Runs all h2 tests.
      */
     public static void main(String[] args) throws IOException, SQLException {
-        SqlitePerformanceExecutor executor = new SqlitePerformanceExecutor();
-        new ResultWriter().print( executor.runAll() );
+        H2PerformanceExecutor executor = new H2PerformanceExecutor();
+        new ResultWriter().print(executor.runAll());
     }
 
-    public SqlitePerformanceExecutor() {
+    public H2PerformanceExecutor() {
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
     public TestResult singleSharedConnection(QueriesConfig queriesConfig) throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("singleSharedConnection")
-                .database(Database.SQLITE)
+                .database(Database.H2)
                 .numRecords(queriesConfig.getNumRecords())
                 .indexed(queriesConfig.isIndexed())
                 .singleSharedConnection()
@@ -59,7 +59,7 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
     public TestResult connectionPool(QueriesConfig queriesConfig) throws IOException, SQLException {
         DbTestRunner runner = new DbTestRunnerBuilder()
                 .name("connectionPool")
-                .database(Database.SQLITE)
+                .database(Database.H2)
                 .numRecords(queriesConfig.getNumRecords())
                 .indexed(queriesConfig.isIndexed())
                 .connectionPool(10)
@@ -68,6 +68,7 @@ public class SqlitePerformanceExecutor implements PerformanceExecutor {
                 .build();
         return run(runner);
     }
+
 
     private TestResult run(DbTestRunner runner) throws IOException, SQLException {
         runner.cleanup(true);
