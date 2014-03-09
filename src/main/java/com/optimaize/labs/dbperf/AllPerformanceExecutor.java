@@ -2,6 +2,7 @@ package com.optimaize.labs.dbperf;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,12 +16,13 @@ public class AllPerformanceExecutor {
 
     public static void main(String[] args) throws IOException, SQLException {
         Database[] values = Database.values();
+        List<TestResult> allResults = new ArrayList<>();
         System.out.println("Running tests for "+values.length+" databases...");
         for (Database database : values) {
             PerformanceExecutor executor = database.newPerformanceExecutor();
-            List<TestResult> results = executor.all();
-            resultWriter.print(results);
+            allResults.addAll(executor.all());
         }
+        resultWriter.print(allResults);
         System.out.println("Done!");
     }
 

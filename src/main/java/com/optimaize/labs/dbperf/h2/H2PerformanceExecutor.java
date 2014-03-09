@@ -24,10 +24,38 @@ public class H2PerformanceExecutor implements PerformanceExecutor {
 
     @Override
     public List<TestResult> all() throws IOException, SQLException {
-        return ImmutableList.of();
+        return ImmutableList.of(
+                singleSharedConnection(),
+                connectionPool()
+        );
     }
 
-    //TODO add tests
+
+    public TestResult singleSharedConnection() throws IOException, SQLException {
+        DbTestRunner runner = new DbTestRunnerBuilder()
+                .name("singleSharedConnection")
+                .database(Database.H2)
+                .numRecords(10000)
+                .indexed(true)
+                .singleSharedConnection()
+                .threadPool(10)
+                .testIterations(1)
+                .build();
+        return run(runner);
+    }
+
+    public TestResult connectionPool() throws IOException, SQLException {
+        DbTestRunner runner = new DbTestRunnerBuilder()
+                .name("connectionPool")
+                .database(Database.H2)
+                .numRecords(10000)
+                .indexed(true)
+                .connectionPool(10)
+                .threadPool(10)
+                .testIterations(1)
+                .build();
+        return run(runner);
+    }
 
 
     private TestResult run(DbTestRunner runner) throws IOException, SQLException {

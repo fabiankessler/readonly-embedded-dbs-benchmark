@@ -20,6 +20,7 @@ public class H2DbUtil implements DbUtil {
 
     @Override
     public String connectionStringForImporting(String pathWithFilename) {
+        pathWithFilename = addSuffixIfMissing(pathWithFilename);
         if (new File(pathWithFilename).exists()) {
             throw new IllegalArgumentException("Already exists, clean up first: "+pathWithFilename);
         }
@@ -30,6 +31,7 @@ public class H2DbUtil implements DbUtil {
 
     @Override
     public String connectionStringForReadonly(String pathWithFilename) {
+        pathWithFilename = addSuffixIfMissing(pathWithFilename);
         if (!new File(pathWithFilename).exists()) {
             throw new IllegalArgumentException("DB does not exist: "+pathWithFilename);
         }
@@ -44,9 +46,22 @@ public class H2DbUtil implements DbUtil {
     }
 
     /**
+     * Example: "foo" => "foo.h2.db"
+     */
+    public String addSuffix(String dbFile) throws IllegalArgumentException {
+        if (dbFile.endsWith(fileSuffix)) {
+            throw new IllegalArgumentException("Already has an h2 file name suffix: "+dbFile);
+        }
+        return dbFile + fileSuffix;
+    }
+    public String addSuffixIfMissing(String dbFile) throws IllegalArgumentException {
+        if (dbFile.endsWith(fileSuffix)) return dbFile;
+        return addSuffix(dbFile);
+    }
+    /**
      * Example: "foo.h2.db" => "foo"
      */
-    private static String removeSuffix(String dbFile) throws IllegalArgumentException {
+    public String removeSuffix(String dbFile) throws IllegalArgumentException {
         if (!dbFile.endsWith(fileSuffix)) {
             throw new IllegalArgumentException("Not a valid h2 db file name: "+dbFile);
         }

@@ -27,7 +27,7 @@ public class SqliteTestDbCreator implements TestDbCreator {
         Connection conn = Util.makeSingleConnection(connString);
         dbUtil.setPropertiesForImporting(conn);
         Statement statement = conn.createStatement();
-        statement.execute("create table test (id INTEGER PRIMARY KEY AUTOINCREMENT, field1 varchar(20) not null, field2 varchar(20) not null)");
+        statement.execute("create table test (id INTEGER PRIMARY KEY AUTOINCREMENT, field1 varchar(32) not null, field2 varchar(32) not null)");
         for (int i=0; i< numRecords; i++) {
             String md5 = Util.md5( Integer.valueOf(i).toString() );
             statement.execute("insert into test (field1, field2) values('"+md5+"', '"+i+"')");
