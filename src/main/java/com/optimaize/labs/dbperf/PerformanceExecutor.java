@@ -14,6 +14,7 @@ public interface PerformanceExecutor {
     /**
      * Runs all tests, and returns the results in execution order.
      */
-    List<TestResult> all() throws IOException, SQLException;
+    List<TestResult> runAll() throws IOException, SQLException;
 
+    List<TestResult> runForConfig(QueriesConfig queriesConfig) throws IOException, SQLException;
 }

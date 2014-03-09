@@ -20,7 +20,7 @@ public class AllPerformanceExecutor {
         System.out.println("Running tests for "+values.length+" databases...");
         for (Database database : values) {
             PerformanceExecutor executor = database.newPerformanceExecutor();
-            allResults.addAll(executor.all());
+            allResults.addAll(executor.runAll());
         }
         resultWriter.print(allResults);
         System.out.println("Done!");
