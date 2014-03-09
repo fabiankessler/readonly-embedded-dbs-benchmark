@@ -22,10 +22,10 @@ public class ResultWriter {
 
     private void _print(TestDbConfig cfg) {
         p("=====================================");
-        p("  DB Config");
-        p("    test db:       "+cfg.getNumRecords()+" records, "+(cfg.isIndexed() ? "indexed" : "not indexed"));
-        p("    test run:      "+cfg.getTestIterations()+" test iterations");
-        p("  Results: --------------------------");
+        p("DB Config");
+        p("  test db:       "+cfg.getNumRecords()+" records, "+(cfg.isIndexed() ? "indexed" : "not indexed"));
+        p("  test run:      "+cfg.getTestIterations()+" test iterations");
+        p("Results: --------------------------");
     }
 
     private ArrayListMultimap<TestDbConfig,TestResult> groupByTestDbConfig(List<TestResult> results) {
@@ -39,18 +39,14 @@ public class ResultWriter {
     private void _print(List<TestResult> results) {
         for (TestResult result : results) {
             RunConfig cfg = result.getDbTestRunner().getDbTestRunConfig();
-            p("=====================================");
-            p("Result: -----------------------------");
-            p("  Times:");
-            p("    total time:    "+result.getTotalTimeMs()+"ms");
-            p("    longest query: "+result.getLongestQueryTimeMs()+"ms");
-            p("  Config:");
-            p("    db:            "+cfg.getDatabase());
-            p("    db connection: "+ ((cfg.getConnectionPoolSize()==null) ? "single-shared" : "pool of "+cfg.getConnectionPoolSize()));
-            p("    threads:       "+ ((cfg.getThreadPoolSize()==null) ? "single-threaded" : "thread-pool of "+cfg.getThreadPoolSize()));
-            //p("    test db:       "+cfg.getTestDbConfig().getNumRecords()+" records, "+(cfg.getTestDbConfig().isIndexed() ? "indexed" : "not indexed"));
-            //p("    test run:      "+cfg.getTestDbConfig().getTestIterations()+" test iterations");
-            p("=====================================");
+            p("  Result: -----------------------------");
+            p("    Config:");
+            p("      db:            "+cfg.getDatabase());
+            p("      db connection: "+ ((cfg.getConnectionPoolSize()==null) ? "single-shared" : "pool of "+cfg.getConnectionPoolSize()));
+            p("      threads:       "+ ((cfg.getThreadPoolSize()==null) ? "single-threaded" : "thread-pool of "+cfg.getThreadPoolSize()));
+            p("    Times:");
+            p("      total time:    "+result.getTotalTimeMs()+"ms");
+            p("      longest query: "+result.getLongestQueryTimeMs()+"ms");
         }
     }
 
