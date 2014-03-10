@@ -25,7 +25,7 @@ public class H2DbUtil implements DbUtil {
             throw new IllegalArgumentException("Already exists, clean up first: "+pathWithFilename);
         }
         String connectionString = makeConnString(pathWithFilename);
-        connectionString += ";LOG=0;CACHE_SIZE=65536;LOCK_MODE=0;UNDO_LOG=0"; //see http://www.h2database.com/html/performance.html
+        connectionString += ";LOG=0;CACHE_SIZE=65536;LOCK_MODE=0;UNDO_LOG=0"; //see http://www.h2database.com/html/performance.html at the end "Fast Database Import"
         return connectionString;
     }
 
@@ -38,6 +38,9 @@ public class H2DbUtil implements DbUtil {
         String connectionString = makeConnString(pathWithFilename);
         connectionString += ";IFEXISTS=TRUE";
         connectionString += ";ACCESS_MODE_DATA=r";
+        connectionString += ";CACHE_SIZE=65536"; //see http://www.h2database.com/html/features.html#cache_settings
+        connectionString += ";TRUE;LOCK_MODE=3"; //see https://groups.google.com/forum/#!msg/h2-database/chvHwUZ20xQ/sYgNWLVSUXQJ
+        connectionString += ";MULTI_THREADED=1"; //see http://www.h2database.com/html/grammar.html#set_multi_threaded
         return connectionString;
     }
 
