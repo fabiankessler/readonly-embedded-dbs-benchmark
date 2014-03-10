@@ -41,7 +41,6 @@ public class H2DbUtil implements DbUtil {
         connectionString += ";CACHE_SIZE=65536"; //see http://www.h2database.com/html/features.html#cache_settings
         connectionString += ";LOCK_MODE=3"; //see https://groups.google.com/forum/#!msg/h2-database/chvHwUZ20xQ/sYgNWLVSUXQJ
         connectionString += ";MULTI_THREADED=1"; //see http://www.h2database.com/html/grammar.html#set_multi_threaded
-        //connectionString += ";FILE_LOCK=NO"; //see http://www.h2database.com/html/features.html?highlight=FILE_LOCK&search=FILE_LOCK#database_file_locking
         return connectionString;
     }
 
