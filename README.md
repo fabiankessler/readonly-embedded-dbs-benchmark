@@ -28,7 +28,7 @@ Please correct me if I'm wrong, and my setup can be improved for a certain use c
 
 For fast queries:
 
-* SQLite is 2x as fast as H2 for very small data
+* SQLite is faster for very small data
 * H2 is faster the larger the db gets
 
 For slow queries:
@@ -60,6 +60,9 @@ configurations:
 ### DB-Specific Notes
 
 ##### SQLite
+
+* (todo)
+
 
 ##### H2
 
@@ -107,7 +110,8 @@ Others like HSQLDB, Apache Derby etc. can be added easily. Just add it to the Da
 ##### Demarcation
 
 The tests are exclusively for a multi-threaded readonly environment.
-Not client/server, not nosql like key/value stores.
+Not <a href="http://voice.xerial.org/2008/11/comparison-between-sqlite-and-h2.html">inserts</a>. Not client/server, not NoSQL like key/value stores.
+It is a very specific use case. Don't draw conclusions from these numbers for other scenarios.
 
 
 ### Results
