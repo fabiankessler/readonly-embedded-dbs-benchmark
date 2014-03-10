@@ -39,7 +39,7 @@ public class H2DbUtil implements DbUtil {
         connectionString += ";IFEXISTS=TRUE";
         connectionString += ";ACCESS_MODE_DATA=r";
         connectionString += ";CACHE_SIZE=65536"; //see http://www.h2database.com/html/features.html#cache_settings
-        connectionString += ";TRUE;LOCK_MODE=3"; //see https://groups.google.com/forum/#!msg/h2-database/chvHwUZ20xQ/sYgNWLVSUXQJ
+        connectionString += ";LOCK_MODE=3"; //see https://groups.google.com/forum/#!msg/h2-database/chvHwUZ20xQ/sYgNWLVSUXQJ
         connectionString += ";MULTI_THREADED=1"; //see http://www.h2database.com/html/grammar.html#set_multi_threaded
         return connectionString;
     }
