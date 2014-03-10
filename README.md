@@ -112,6 +112,8 @@ Not client/server, not nosql like key/value stores.
 
 ### Results
 
+These results are from my aging workstation, SSD.
+
 Tiny db, fast queries. SQLite with a single-shared db connection wins.
 
     =====================================
@@ -134,23 +136,22 @@ Tiny db, fast queries. SQLite with a single-shared db connection wins.
           threads:       thread-pool of 10
         Times:
           total time:    1054ms
-          longest query: 48ms
-      Result: -----------------------------
-        Config:
-          db:            H2
-          db connection: single-shared
-          threads:       thread-pool of 10
-        Times:
-          total time:    1933ms
-          longest query: 100ms
       Result: -----------------------------
         Config:
           db:            H2
           db connection: pool of 10
           threads:       thread-pool of 10
         Times:
-          total time:    2295ms
-          longest query: 211ms
+          total time:    1403ms
+          longest query: 195ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    1837ms
+          longest query: 79ms
 
 
 Small db, fast queries. H2 with a connection pool wins.
@@ -165,16 +166,16 @@ Small db, fast queries. H2 with a connection pool wins.
           db connection: pool of 10
           threads:       thread-pool of 10
         Times:
-          total time:    2271ms
-          longest query: 99ms
+          total time:    2000ms
+          longest query: 101ms
       Result: -----------------------------
         Config:
           db:            H2
           db connection: single-shared
           threads:       thread-pool of 10
         Times:
-          total time:    3074ms
-          longest query: 91ms
+          total time:    2878ms
+          longest query: 75ms
       Result: -----------------------------
         Config:
           db:            SQLITE
@@ -205,15 +206,15 @@ Large db, fast queries. H2 with a single-shared db connection wins.
           db connection: pool of 10
           threads:       thread-pool of 10
         Times:
-          total time:    38244ms
-          longest query: 167ms
+          total time:    29554ms
+          longest query: 148ms
       Result: -----------------------------
         Config:
           db:            H2
           db connection: single-shared
           threads:       thread-pool of 10
         Times:
-          total time:    42369ms
+          total time:    40967ms
           longest query: 155ms
       Result: -----------------------------
         Config:
@@ -245,29 +246,29 @@ Small db, slow queries. SQLite with a connection pool wins.
           db connection: pool of 10
           threads:       thread-pool of 10
         Times:
-          total time:    9134ms
-          longest query: 173ms
-      Result: -----------------------------
-        Config:
-          db:            SQLITE
-          db connection: single-shared
-          threads:       thread-pool of 10
-        Times:
-          total time:    21439ms
-          longest query: 172ms
-      Result: -----------------------------
-        Config:
-          db:            H2
-          db connection: single-shared
-          threads:       thread-pool of 10
-        Times:
-          total time:    24400ms
-          longest query: 122ms
+          total time:    9146ms
+          longest query: 111ms
       Result: -----------------------------
         Config:
           db:            H2
           db connection: pool of 10
           threads:       thread-pool of 10
         Times:
-          total time:    24663ms
+          total time:    10085ms
+          longest query: 82ms
+      Result: -----------------------------
+        Config:
+          db:            SQLITE
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    21556ms
           longest query: 132ms
+      Result: -----------------------------
+        Config:
+          db:            H2
+          db connection: single-shared
+          threads:       thread-pool of 10
+        Times:
+          total time:    23014ms
+          longest query: 161ms
