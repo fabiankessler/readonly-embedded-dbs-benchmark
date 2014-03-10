@@ -1,5 +1,5 @@
-readonly-embedded-dbs-performance-tests
-=======================================
+readonly-embedded-dbs-benchmark
+===============================
 
 Tests *embedded sql* databases in *multi-threaded*, *readonly* mode for performance.
 
@@ -8,17 +8,6 @@ Tests *embedded sql* databases in *multi-threaded*, *readonly* mode for performa
 
 * SQLite
 * H2
-
-
-##### Adding other databases
-
-Others like HSQLDB, Apache Derby etc. can be added easily. Just add it to the Database enum, and go from there.
-
-
-##### Demarcation
-
-The tests are exclusively for a multi-threaded readonly environment.
-Not client/server, not nosql like key/value stores.
 
 
 ### Goal
@@ -44,26 +33,42 @@ For fast queries:
 
 For slow queries:
 
-* SQLite with connection pool wins. This is the only acceptable setup.
-* H2 uses synchronization internally, and that behaves as it was single-threaded.
+* SQLite with connection pool wins. For some, this is the only acceptable setup.
+* H2 uses synchronization internally, and that behaves as if it was single-threaded.
   When one query takes long, others effectively have to wait. Even if all queries
   are read-only.
+  There are two workarounds.
+  Option 1: Set MULTI_THREADED=1. This is a global setting, and hence all open dbs
+            use this mode, you can't have any other. It's an experimental feature (has been
+            for the last 6 years at least), and if you do writes, <a href="https://code.google.com/p/h2database/issues/detail?id=539&can=1&sort=-id">expect corrupt data</a>.
+            So it is an option if all your h2 dbs are read-only.
+  Option 2: Create multiple single connections to the same db, separate, and mange the
+            connections yourself using some kind of pool. This is the option that the
+            author Thomas Müller suggested long time ago on the mailing list. It works
+            since all connections are read-only and don't do locking.
 
 Therefore: If you know that you don't have any slow queries ever, you can choose the
-best setup based on the numbers; SQLite for tiny, H2 for larger DBs.
+best setup based on the numbers and your likings.
 
-If you possibly or certainly have slow queries, with concurrent requests,
-*SQLite with a thread pool is the only viable option*.
+If you possibly or certainly have slow queries, with concurrent requests, you need one of these
+configurations:
+
+* SQLite with a connection pool
+* H2 with a connection pool, and MULTI_THREADED=1
 
 
-### How To Use
+### DB-Specific Notes
 
-To run the tests yourself, just start the AllPerformanceExecutor app.
+##### SQLite
 
-To run the tests for one db only, run for example the SqlitePerformanceExecutor app.
+##### H2
 
-To change a different scenario, take a look at QueriesConfigs to add or modify what is currently active.
-There you can for example change the number of records in the test db.
+The applied connection string params are:
+
+* ACCESS_MODE_DATA=r
+* MULTI_THREADED=1 see http://www.h2database.com/html/grammar.html#set_multi_threaded
+* CACHE_SIZE=65536 see http://www.h2database.com/html/features.html#cache_settings
+
 
 
 ### Open Questions / TODO
@@ -79,7 +84,30 @@ Each record has a numerical incrementing primary key starting starting at 1,
 and a text field that stores the md5 value of the pk (eg 1 = "c4ca4238a0b923820dcc509a6f75849b").
 
 Queries are run against that md5 field. There are 'fast' query tests where this field
-has an index, and 'slow' where not.
+has an index, and 'slow' that force a full table scan.
+
+
+### How To Run
+
+Java7 or later, and run with -ea -server
+
+To run the tests yourself, just start the AllPerformanceExecutor app.
+
+To run the tests for one db only, run for example the SqlitePerformanceExecutor app.
+
+To change a different scenario, take a look at QueriesConfigs to add or modify what is currently active.
+There you can for example change the number of records in the test db.
+
+
+##### Adding other databases
+
+Others like HSQLDB, Apache Derby etc. can be added easily. Just add it to the Database enum, and go from there.
+
+
+##### Demarcation
+
+The tests are exclusively for a multi-threaded readonly environment.
+Not client/server, not nosql like key/value stores.
 
 
 ### Results
