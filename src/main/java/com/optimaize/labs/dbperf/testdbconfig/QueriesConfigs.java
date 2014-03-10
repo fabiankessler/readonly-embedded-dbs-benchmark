@@ -16,7 +16,7 @@ public class QueriesConfigs {
                 indexedOneThousand(),
                 indexedTenThousand(),
                 indexedOneMillion(),
-                slow()
+                fulltablescanTenThousand()
         );
     }
 
@@ -46,7 +46,7 @@ public class QueriesConfigs {
      * Since we're looking for the best performance in a multi-threaded readonly scenario, this is what we
      * are trying to prevent.
      */
-    public static TestDbConfig slow() {
+    public static TestDbConfig fulltablescanTenThousand() {
         return new TestDbConfigImpl(10000, false, 1);
     }
 
