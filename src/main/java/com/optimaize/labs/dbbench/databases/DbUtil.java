@@ -1,5 +1,8 @@
 package com.optimaize.labs.dbbench.databases;
 
+import com.google.common.base.Optional;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
@@ -37,4 +40,6 @@ public interface DbUtil {
      * May set properties on the connection for the readonly lookup mode.
      */
     void setPropertiesForReadonly(Connection connection);
+
+    Optional<DataSource> dataSourceForReadonly(String pathWithFilename);
 }

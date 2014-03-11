@@ -1,7 +1,11 @@
 package com.optimaize.labs.dbbench.databases.sqlite;
 
+import com.google.common.base.Optional;
 import com.optimaize.labs.dbbench.databases.DbUtil;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -57,24 +61,21 @@ public class SqliteDbUtil implements DbUtil {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        try {
-//            //java.sql.SQLException: Cannot set read-only flag after establishing a connection. Use SQLiteConfig#setReadOnly and SQLiteConfig.createConnection().
-//            connection.setReadOnly(true);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
-//    private void connPool() {
-//        org.sqlite.SQLiteConfig config = new org.sqlite.SQLiteConfig();
-//        config.setReadOnly(true);
-//        config.setPageSize(4096); //in bytes
-//        config.setCacheSize(2000); //number of pages
-//        config.setSynchronous(SQLiteConfig.SynchronousMode.OFF);
-//        config.setJournalMode(SQLiteConfig.JournalMode.OFF);
-//
-//        SQLiteConnectionPoolDataSource dataSource = new SQLiteConnectionPoolDataSource();
-//        dataSource.setInitialPoolSize()
-//    }
+    @Override
+    public Optional<DataSource> dataSourceForReadonly(String pathWithFilename) {
+        org.sqlite.SQLiteConfig config = new org.sqlite.SQLiteConfig();
+        config.setReadOnly(true);
+        config.setPageSize(4096); //in bytes
+        config.setCacheSize(2000); //number of pages
+        config.setSynchronous(SQLiteConfig.SynchronousMode.OFF);
+        config.setJournalMode(SQLiteConfig.JournalMode.OFF);
+
+        // get an unpooled SQLite DataSource with the desired configuration
+        SQLiteDataSource unpooled = new SQLiteDataSource( config );
+        unpooled.setUrl(connectionStringForReadonly(pathWithFilename));
+        return Optional.of((DataSource)unpooled);
+    }
 
 }

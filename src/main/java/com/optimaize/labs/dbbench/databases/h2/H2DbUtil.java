@@ -1,7 +1,9 @@
 package com.optimaize.labs.dbbench.databases.h2;
 
+import com.google.common.base.Optional;
 import com.optimaize.labs.dbbench.databases.DbUtil;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
 
@@ -80,5 +82,10 @@ public class H2DbUtil implements DbUtil {
     @Override
     public void setPropertiesForReadonly(Connection connection) {
         //nothing to do
+    }
+
+    @Override
+    public Optional<DataSource> dataSourceForReadonly(String pathWithFilename) {
+        return Optional.absent();
     }
 }

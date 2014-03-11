@@ -1,7 +1,11 @@
 package com.optimaize.labs.dbbench;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
+import com.mchange.v2.c3p0.PoolConfig;
+import com.mchange.v2.c3p0.PooledDataSource;
 import com.optimaize.labs.dbbench.databases.DbUtil;
 import com.optimaize.labs.dbbench.databases.TestDbCreator;
 import com.optimaize.labs.dbbench.util.ConcurrentMaxCollector;
@@ -35,7 +39,7 @@ class DbTestRunnerImpl implements DbTestRunner {
     @Nullable
     private Connection dbSingleConnection;
     @Nullable
-    private ComboPooledDataSource dbConnectionPool;
+    private PooledDataSource dbConnectionPool;
     @NotNull
     private JdbcTemplate jdbcTemplate;
 
@@ -108,14 +112,20 @@ class DbTestRunnerImpl implements DbTestRunner {
         if (dbSingleConnection!=null) {
             try {
                 dbSingleConnection.close();
-                dbSingleConnection = null;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+            } finally {
+                dbSingleConnection = null;
             }
         }
         if (dbConnectionPool!=null) {
-            dbConnectionPool.close();
-            dbConnectionPool = null;
+            try {
+                dbConnectionPool.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                dbConnectionPool = null;
+            }
         }
     }
 
@@ -169,20 +179,38 @@ class DbTestRunnerImpl implements DbTestRunner {
         );
     }
 
-    private ComboPooledDataSource makeConnectionPool(int connPoolSize) {
+    private PooledDataSource makeConnectionPool(int connPoolSize) {
+        String dbFile = cfg.getDatabase().getTestDbPathToFile()+cfg.getName();
+        Optional<DataSource> unpooled = dbUtil.dataSourceForReadonly(dbFile);
+        if (unpooled.isPresent()) {
+            return makeConnectionPoolFromSimpleDataSource(connPoolSize, unpooled);
+        } else {
+            try {
+                ComboPooledDataSource cpds = new ComboPooledDataSource();
+                cpds.setDriverClass(dbUtil.getDriverClassName());
+                cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(dbFile));
+                cpds.setInitialPoolSize(0);
+                cpds.setMinPoolSize(0);
+                cpds.setMaxPoolSize(connPoolSize);
+                cpds.setMaxIdleTime(1);
+                cpds.setMaxIdleTimeExcessConnections(1);
+                //cpds.setAcquireIncrement(Accomodation);
+                return cpds;
+            } catch (PropertyVetoException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    private PooledDataSource makeConnectionPoolFromSimpleDataSource(int connPoolSize, Optional<DataSource> unpooled) {
+        //see http://stackoverflow.com/questions/22303796/set-sqlite-connection-properties-in-c3p0-connection-pool
+        PoolConfig poolConfig = new PoolConfig();
+        poolConfig.setMaxPoolSize(connPoolSize);
         try {
-            ComboPooledDataSource cpds = new ComboPooledDataSource();
-            cpds.setDriverClass(dbUtil.getDriverClassName());
-            cpds.setJdbcUrl(dbUtil.connectionStringForReadonly(cfg.getDatabase().getTestDbPathToFile()+cfg.getName()));
-            cpds.setInitialPoolSize(0);
-            cpds.setMinPoolSize(0);
-            cpds.setMaxPoolSize(connPoolSize);
-            cpds.setMaxIdleTime(1);
-            cpds.setMaxIdleTimeExcessConnections(1);
-            //cpds.setAcquireIncrement(Accomodation);
-            return cpds;
-        } catch (PropertyVetoException ex) {
-            throw new RuntimeException(ex);
+            DataSource dataSource = DataSources.pooledDataSource(unpooled.get(), poolConfig);
+            return (PooledDataSource)dataSource; //ugly
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

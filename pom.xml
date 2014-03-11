@@ -42,7 +42,7 @@
             <artifactId>h2</artifactId>
             <version>${h2database.version}</version>
         </dependency>
-        <dependency><!-- connection pool -->
+        <dependency><!-- connection pool, which according to me is the best http://www.flowstopper.org/2013/04/java-replace-apache-commons-dbcp.html -->
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>${c3p0.version}</version>
