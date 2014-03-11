@@ -206,6 +206,11 @@ class DbTestRunnerImpl implements DbTestRunner {
         //see http://stackoverflow.com/questions/22303796/set-sqlite-connection-properties-in-c3p0-connection-pool
         PoolConfig poolConfig = new PoolConfig();
         poolConfig.setMaxPoolSize(connPoolSize);
+
+        //we do not want to cache prepared statements. our queries are super simple. we only lose speed, don't gain any.
+        //see http://www.mchange.com/projects/c3p0/ topic "Configuring Statement Pooling"
+        //cpds.setMaxStatements(1000); //prepared statements cache
+
         try {
             DataSource dataSource = DataSources.pooledDataSource(unpooled.get(), poolConfig);
             return (PooledDataSource)dataSource; //ugly
